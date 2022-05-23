@@ -20,7 +20,7 @@ class Home extends Component {
 
   addTodo = (todo) => { 
     const exists = this.state.todos.find(t => t.content === todo.content);
-    if (exists || todo.content.trim() == null || todo.content.trim() == ''){ return }
+    if (exists || todo.content.trim() == null || todo.content.trim() === '' || todo.due == null || todo.due === 'Invalid Date'){ return }
     todo.id = Math.random();
     let todos = [...this.state.todos, todo];
     this.setState({
