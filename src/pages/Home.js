@@ -28,12 +28,17 @@ class Home extends Component {
     });
   };
 
+  updateTodo = (id, newTodo) => {
+    if (newTodo.content.trim() === null || newTodo.content.trim() === ''){ return }
+    this.setState(prev => prev.map(item => (item.id === id ? newTodo : item)))
+  }
+
   render() {
     return (
       <div className="Home">
         <h1>Todo List </h1>
         <AddTodo addTodo={this.addTodo} />
-        <Todos todos={this.state.todos} deleteTodo={this.deleteTodo} />
+        <Todos todos={this.state.todos} deleteTodo={this.deleteTodo} updateTodo={this.updateTodo}/>
       </div>
     );
   }
