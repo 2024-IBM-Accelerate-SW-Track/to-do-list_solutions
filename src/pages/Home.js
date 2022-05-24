@@ -20,7 +20,7 @@ class Home extends Component {
 
   addTodo = (todo) => { 
     const exists = this.state.todos.find(t => t.content === todo.content);
-    if (exists || todo.content.trim() == null || todo.content.trim() == ''){ return }
+    if (exists || todo.content.trim() === null || todo.content.trim() === ''){ return }
     todo.id = Math.random();
     let todos = [...this.state.todos, todo];
     this.setState({
@@ -28,12 +28,17 @@ class Home extends Component {
     });
   };
 
+  updateTodo = (id, newTodo) => {
+    if (newTodo.content.trim() === null || newTodo.content.trim() === ''){ return }
+    this.setState(prev => prev.map(item => (item.id === id ? newTodo : item)))
+  }
+
   render() {
     return (
       <div className="Home">
         <h1>Todo List </h1>
         <AddTodo addTodo={this.addTodo} />
-        <Todos todos={this.state.todos} deleteTodo={this.deleteTodo} />
+        <Todos todos={this.state.todos} deleteTodo={this.deleteTodo} updateTodo={this.updateTodo}/>
       </div>
     );
   }

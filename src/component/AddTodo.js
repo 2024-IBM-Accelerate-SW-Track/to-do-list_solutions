@@ -11,7 +11,7 @@ class AddTodo extends Component {
   handleChange = (e) => {
     this.setState({
       content: e.target.value,
-      date: Date().toLocaleString(),
+      date: Date().toLocaleString('en-US'),
     });
   };
 
@@ -23,6 +23,7 @@ class AddTodo extends Component {
       date: "",
     });
   };
+  
   render() {
     return (
       <div>

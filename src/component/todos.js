@@ -1,7 +1,6 @@
 import React from "react";
 import "../component/todos.css";
-import {  Card, Grid, ListItem, ListItemText, Button, Checkbox } from "@material-ui/core";
-import DeleteIcon from '@material-ui/icons/Delete';
+import {  Card, Grid, ListItem, ListItemText, Checkbox } from "@material-ui/core";
 
 const Todos = ({ todos, deleteTodo }) => {
 
@@ -11,14 +10,9 @@ const Todos = ({ todos, deleteTodo }) => {
         <Grid key={todo.id} container spacing={2}>
           <Card style={{marginTop:10}}>
             <ListItem Button component="a" href="#simple-list">
-              <Checkbox style={{paddingLeft:0}} color="primary"/>
+              <Checkbox style={{paddingLeft:0}} color="primary" onClick={() => deleteTodo(todo.id)}/>
               <ListItemText primary={todo.content} secondary={todo.date}/>
             </ListItem>
-          </Card>
-          <Card style={{width:40, justifyContent:'center', marginTop:10, marginLeft:2}}>
-            <Button style={{marginTop:20, paddingRight:30}} onClick={()=> deleteTodo(todo.id)}>
-              <DeleteIcon/>
-            </Button>
           </Card>
         </Grid>
       );
