@@ -20,14 +20,26 @@ test('test that App component renders', () => {
   render(<App />, container);
  });
 
-test('test that new-item-button is a button', () => {
+test('test that we have an Add button', () => {
   render(<App/>, container);
-  const element = screen.getByTestId('new-item-button');
-  expect(element.innerHTML.toLowerCase().includes("button")).toBe(true)
+  const element = screen.getByRole('button', {name: /Add/i});
+  expect(element).toBeInTheDocument();
 });
 
-test('test that new-item-input is an input ', () => {
+test('test that there is an input field for task names', () => {
   render(<App/>, container);
-  const element = screen.getByTestId('new-item-input');
-  expect(element.innerHTML.toLowerCase().includes("input")).toBe(true)
+  const element = screen.getByRole('textbox', {name: /Add New Item/i});
+  expect(element).toBeInTheDocument();
+});
+
+test('test that there is an input field for due dates', () => {
+  render(<App/>, container);
+  const element = screen.getByPlaceholderText("mm/dd/yyyy");
+  expect(element).toBeInTheDocument();
+});
+
+test('test for no tasks text', () => {
+  render(<App/>, container);
+  const check = screen.getByText(/You have no todo's left/i)
+  expect(check).toBeInTheDocument();
 });

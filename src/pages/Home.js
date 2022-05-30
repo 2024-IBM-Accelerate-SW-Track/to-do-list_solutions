@@ -33,7 +33,7 @@ class Home extends Component {
     this.setState(prev => prev.map(item => (item.id === id ? newTodo : item)))
   }
 
-  render() {
+  render() {  
     return (
       <div className="Home">
         <h1>Todo List </h1>

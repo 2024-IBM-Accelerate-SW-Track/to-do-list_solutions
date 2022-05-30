@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import { TextField } from "@material-ui/core";
-import { Button } from "@material-ui/core";
-import { DatePicker , LocalizationProvider} from '@mui/x-date-pickers';
+import { Button, TextField } from "@mui/material";
+import { DesktopDatePicker , LocalizationProvider} from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
 class AddTodo extends Component {
@@ -41,14 +40,15 @@ class AddTodo extends Component {
       <div>
         <form onSubmit={this.handleSubmit}>
           <TextField
-            id="outlined-basic"
+            id="new-item-input"
             label="Add New Item"
             variant="outlined"
             onChange={this.handleChange}
             value={this.state.content}
           /> 
            <LocalizationProvider dateAdapter={AdapterDateFns}>
-           <DatePicker
+           <DesktopDatePicker
+              id="new-item-date"
               label="Due Date"
               value={this.state.due}
               onChange={this.handleTimeChange}
@@ -56,6 +56,8 @@ class AddTodo extends Component {
             />
            </LocalizationProvider>
           <Button
+            id="new-item-button"
+            name='submit'
             style={{ marginLeft: "10px",marginTop:10 }}
             onClick={this.handleSubmit}
             variant="contained"
