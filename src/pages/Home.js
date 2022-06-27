@@ -1,12 +1,22 @@
 import React, { Component } from "react";
 import Todos from "../component/todos";
 import AddTodo from "../component/AddTodo";
+//**week 5 import search commponent
+import SearchTodo from "../component/SearchTodo";
 import "../pages/Home.css";
+
 
 class Home extends Component {
 
   state = {
     todos: [],
+  };
+  
+  //**week 5 implementation
+  //load todo list if exists
+  loadTodo = (todo) => {
+
+
   };
 
   deleteTodo = (id) => {
@@ -39,6 +49,7 @@ class Home extends Component {
         <h1>Todo List </h1>
         <AddTodo addTodo={this.addTodo} />
         <Todos todos={this.state.todos} deleteTodo={this.deleteTodo} updateTodo={this.updateTodo}/>
+        <SearchTodo searchTodo={this.searchTodo} />
       </div>
     );
   }
