@@ -2,8 +2,9 @@ import React from "react";
 import "../component/todos.css";
 import {  Card, Grid, ListItemButton, ListItemText, Checkbox } from "@mui/material";
 
-const Todos = ({ todos, deleteTodo }) => {
 
+const Todos = ({ todos, deleteTodo }) => {
+  console.log(todos);
   const todoList = todos.length ? (
     todos.map((todo) => {
       let color = '#fffffff'
@@ -31,6 +32,8 @@ const Todos = ({ todos, deleteTodo }) => {
       {todoList}
     </div>
   );
+
+
 };
 
 export default Todos;

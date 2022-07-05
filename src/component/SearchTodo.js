@@ -1,12 +1,11 @@
-import React, { Component } from "react";
+import React, { Component, Redirect } from "react";
 import { Button, TextField } from "@mui/material";
 import Axios from "axios";
-//**week5 implement a search service and test from front end */
+
 class SearchTodo extends Component {
+  
   state = {
-    content: "",
-    date: "",
-    due: null,
+    tmpdata: [],
   };
 
   handleChange = (e) => {
@@ -18,30 +17,25 @@ class SearchTodo extends Component {
   
 
   handleSubmit = (e) => {
-    e.preventDefault();
-    // JSON object to be sent as body of request
-    const jsonObject = {
-      task: this.state.content
-    };
-  
+    e.preventDefault();  
     // HTTP Client to send a GET request
     Axios({
       method: "GET",
-      url: "http://localhost:8080/search/item",
-      data: {jsonObject},
+      url: "http://localhost:8080/get/searchitem",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json" 
+      },
+      params: {
+        taskname: this.state.content
       }
     }).then(res => {
-      console.log(res.data.message);
+      this.setState({
+        tmpdata: JSON.stringify(res.data),
+      });
+      // uncomment to see from the browser console log what is returned 
+      //console.log(this.state.tmpdata);
     });
 
-    //this.props.addTodo(this.state);
-    this.setState({
-      content: "",
-      date: "",
-      due: null,
-    });
   };
   
   render() {
@@ -53,7 +47,7 @@ class SearchTodo extends Component {
             label="Search for ToDo Item"
             variant="outlined"
             onChange={this.handleChange}
-            value={this.state.content}
+            value={this.state.value}
           /> 
           <Button
             id="search-item-button"
@@ -66,6 +60,7 @@ class SearchTodo extends Component {
             Search
           </Button>
         </form>
+        <div>{this.state.tmpdata}</div>
       </div>
     );
   }

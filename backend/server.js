@@ -40,28 +40,35 @@ function addItem (request, response) {
     response.send(200)
 }
 
-app.get("/get/searchitem",searchItems)
-//**week 5, search items service */
-//curl http://localhost:8080/get/searchitem?taskname=test
-//curl http://localhost:8080/get/searchitem?taskname=hello%20world
-  function searchItems (request, response) {
-  //retrieve a task currently in the database
-  //var searchField = request.parse('taskname')
-  var searchField = request.query.taskname
-  console.log(searchField)
-  var json = JSON.parse (fs.readFileSync('database.json'))
-  rta = json.filter(jsondata => jsondata.Task === searchField)
-  console.log(rta)
-  response.json(rta)
-  response.send()
-  }
-
 app.get("/get/items", getItems)
 //** week5, get all items from the json database*/
-//curl http://localhost:8080/get/items
   function getItems (request, response) {
+    //begin here
     var data = fs.readFileSync('database.json');
-    console.log(JSON.parse(data))
+    
+    //uncomment to see the data being returned 
+    //console.log(JSON.parse(data));
+
     response.json(JSON.parse(data));
-    response.send();
-  }   
+    // Note this won't work, why? response.send();
+  } 
+
+
+app.get("/get/searchitem",searchItems)
+//**week 5, search items service */
+  function searchItems (request, response) {
+    //begin here
+    var searchField = request.query.taskname;
+    //uncomment to see the searchField passed in
+    //console.log(searchField);
+
+    var json = JSON.parse (fs.readFileSync('database.json'));
+    returnData = json.filter(jsondata => jsondata.Task === searchField);
+
+    //uncomment to see the todolists found in the backend service// 
+    //console.log(returnData);
+    response.json(returnData);
+    //Note this won't work, why? response.send();
+  }
+
+  
