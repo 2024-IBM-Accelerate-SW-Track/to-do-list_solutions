@@ -33,9 +33,17 @@ Implementation requirements:
 #### Testing
 We will test this service using the curl utility.  The curl utility is quite useful because it can send requests to services, simulating consuming applications that would utilize the backend service.
 
-1. Start the backend service, go to the "to-do-list/backend" directory and type "npm start"
+1. Stop the backend service if it's currently running (Ctrl-C the terminal/command window where you did the last npm run for the backend)
+2. Start the backend service, go to the "to-do-list/backend" directory and install required packages and start the backend:
+```
+npm install
+npm start
+```
 
-2. Open another terminal or command window.  Type "curl http://localhost:8080/get/items"
+3. Open another terminal or command window.  Type this curl command to send a request to this service:
+```
+    curl http://localhost:8080/get/items
+```
 
 ### GET Service - Search for and Return a ToDo List
 
@@ -52,7 +60,7 @@ We will test this service using the curl utility.  The curl utility is quite use
 ```
 5. Add the following to take the data from the database and apply a filter, this will seperate out only the Todo lists that match our search parameter given to the backend service and stored in "searchField":
 ```
-    returnData = json.filter(jsondata => jsondata.Task === searchField);
+    var returnData = json.filter(jsondata => jsondata.Task === searchField);
 ```
 6. Whether we have data to return (i.e. todo lists that matches the name we're looking for) or not (i.e. there were no todo lists with the name), we return a response to whoever called this service with the following:
 ```
@@ -62,20 +70,33 @@ We will test this service using the curl utility.  The curl utility is quite use
 #### Testing
 
 
-1. Start the backend service, go to the "to-do-list/backend" directory and type "npm start"
+1. Stop the backend service if it's currently running (Ctrl-C the terminal/command window where you did the last npm run for the backend)
+
+2. Start the backend service, go to the "to-do-list/backend" directory and install required packages and start the backend (you can skip the npm install if you ran that already above):
+```
+npm install
+npm start
+```
 
 2. Open another terminal or command window.  
-Contruct a curl command to search for a task: "curl http://localhost:8080/get/searchitem?taskname=<nametosearchfor>" 
+Contruct a curl command to search for a task: 
+``` curl http://localhost:8080/get/searchitem?taskname=<nametosearchfor>
+```
 
-So for example, if you want to search for todo lists with a name of "hello", your command would be "curl http://localhost:8080/get/searchitem?taskname=hello".
+So for example, if you want to search for todo lists with a name of "hello", your command would be:
+```
+    curl http://localhost:8080/get/searchitem?taskname=hello
+```
 
-If you want to search for a task name with a space in it, for example "hello world" you will need to use the html code for a space (%20) in your curl command, like this: curl "http://localhost:8080/get/searchitem?taskname=hello%20world"
-
+If you want to search for a task name with a space in it, for example "hello world" you will need to use the html code for a space (%20) in your curl command, like this: 
+```
+    curl http://localhost:8080/get/searchitem?taskname=hello%20world
+```
 
 ### Optional - Use the UI to Call the Backend Service to Return All Todo Lists
 
 #### Implementation
-1. Open the front end component TodoData.js, on the line after the comment "//begin here" copy/paste/type the following code:
+1. Open the front end component src/component/TodoData.js, on the line after the comment "//begin here" copy/paste/type the following code:
 ```
         const [todos, setTodos] = useState([]);
         
@@ -99,9 +120,16 @@ If you want to search for a task name with a space in it, for example "hello wor
 
 #### Testing
 
-1. Go to the to-do-list directory and run the front-end "npm start"
+1. Go to the "to-do-list" directory and run the front-end and run:
+```
+    npm install
+    npm start
+```
 
-2. Open a terminal or command window and go to the to-do-list/backend directly and run the backend "npm start"
+2. Open a terminal or command window and go to the to-do-list/backend directory and run the backend:
+```
+    npm start
+```
 
 3. Go to a browser and open the front-end, if not open already, http://localhost:3000, this should bring up the home page. Go to the top navigation bar and click on the "TodoPage"
 
@@ -111,7 +139,7 @@ If you want to search for a task name with a space in it, for example "hello wor
 
 #### Implementation
 
-1. Open the front end component SearchTodo.js, on the line after the comment "//begin here" copy/paste/type the following code:
+1. Open the front end component src/component/SearchTodo.js, on the line after the comment "//begin here" copy/paste/type the following code:
 ```
             e.preventDefault();  
             // HTTP Client to send a GET request
@@ -137,13 +165,20 @@ If you want to search for a task name with a space in it, for example "hello wor
 
 
 #### Testing
-1. Go to the to-do-list directory and run the front-end "npm start"
+1. Go to the "to-do-list" directory and run the front-end and run:
+```
+    npm install
+    npm start
+```
 
-2. Open a terminal or command window and go to the to-do-list/backend directly and run the backend "npm start"
+2. Open a terminal or command window and go to the to-do-list/backend directory and run the backend:
+```
+    npm start
+```
 
 3. Go to a browser and open the front-end, if not open already, http://localhost:3000, this should bring up the home page. Go to the top navigation bar and click on the "TodoPage"
 
-4. Notice the input text box and button that will search for a Todo list in the backend. Type a task name that you know exists or doesn't exist and click the button.
+4. Notice the input text box and button that will search for a Todo list in the backend. Type a task name that you know exists or doesn't exist and click the button. (Note if you left the frontend and backend services running after completing the lab steps above make sure you refresh the page so the changes you made load correctly in the browser)
 
 5. Observe the returned value in the div section below the search UI, it will be updated in real-time after we submit the form, returning with the data obtained from the backend.
 
