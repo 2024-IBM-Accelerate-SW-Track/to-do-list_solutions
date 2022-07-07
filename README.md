@@ -70,7 +70,7 @@ npm start
 #### Testing
 
 
-1. Stop the backend service if it's currently running (Ctrl-C the terminal/command window where you did the last npm run for the backend)
+1. Stop the backend service if it's currently running (Ctrl-C the terminal/command window where you did the last "npm start" for the backend)
 
 2. Start the backend service, go to the "to-do-list/backend" directory and install required packages and start the backend (you can skip the npm install if you ran that already above):
 ```
