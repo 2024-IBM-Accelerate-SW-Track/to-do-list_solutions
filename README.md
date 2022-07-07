@@ -96,7 +96,7 @@ If you want to search for a task name with a space in it, for example "hello wor
 ### Optional - Use the UI to Call the Backend Service to Return All Todo Lists
 
 #### Implementation
-1. Open the front end component src/component/TodoData.js, on the line after the comment "//begin here" copy/paste/type the following code:
+1. Open the front end component to-do-list/src/component/TodoData.js, on the line after the comment "//begin here" copy/paste/type the following code:
 ```
         const [todos, setTodos] = useState([]);
         
@@ -139,7 +139,7 @@ If you want to search for a task name with a space in it, for example "hello wor
 
 #### Implementation
 
-1. Open the front end component src/component/SearchTodo.js, on the line after the comment "//begin here" copy/paste/type the following code:
+1. Open the front end component to-do-list/src/component/SearchTodo.js, on the line after the comment "//begin here" copy/paste/type the following code:
 ```
             e.preventDefault();  
             // HTTP Client to send a GET request
