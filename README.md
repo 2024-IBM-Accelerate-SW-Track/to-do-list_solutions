@@ -23,12 +23,13 @@ Implementation requirements:
 1. Open to-do-list/backend/server.js
 2. Go to the GET listener "app.get("/get/items", getItems)"
 3. At the comment "//begin here" copy/paste/type the following code to read in the todo lists stored in the database.json file:
-
+```
     var data = fs.readFileSync('database.json');
+```
 4. Return a response to whoever called the data we just read in, we will return the data from the file but parsed as JSON data:
-
+```
     response.json(JSON.parse(data));
-
+```
 #### Testing
 We will test this service using the curl utility.  The curl utility is quite useful because it can send requests to services, simulating consuming applications that would utilize the backend service.
 
@@ -42,18 +43,21 @@ We will test this service using the curl utility.  The curl utility is quite use
 1. Open to-do-list/backend/server.js
 2. Go to the GET listener "app.get("/get/searchitem",searchItems)"
 3. On the line after the comment "//begin here" copy/paste/type the following code, this will retrieve a parameter passed to this service, this parameter will be the name of the Todo List we will search for:
-
+```
     var searchField = request.query.taskname;
+```
 4. Continue editing this function by adding the following to read in the database 
-
+```
     var json = JSON.parse (fs.readFileSync('database.json'));
+```
 5. Add the following to take the data from the database and apply a filter, this will seperate out only the Todo lists that match our search parameter given to the backend service and stored in "searchField":
-
+```
     returnData = json.filter(jsondata => jsondata.Task === searchField);
+```
 6. Whether we have data to return (i.e. todo lists that matches the name we're looking for) or not (i.e. there were no todo lists with the name), we return a response to whoever called this service with the following:
-
+```
     response.json(returnData);
-  
+```
 
 #### Testing
 
@@ -72,6 +76,7 @@ If you want to search for a task name with a space in it, for example "hello wor
 
 #### Implementation
 1. Open the front end component TodoData.js, on the line after the comment "//begin here" copy/paste/type the following code:
+```
         const [todos, setTodos] = useState([]);
         
         useEffect( () => { 
@@ -87,6 +92,7 @@ If you want to search for a task name with a space in it, for example "hello wor
             fetchData();
         }, []);
         return <div>{todos}</div>
+```
 2. Note the above code does a number of things, it makes use of the "useEffect" hook in react, and the await keyword, this combination is essentially telling react to wait for a call to a backend service to complete, then proceeds with the rest of the render.  Remember that nodeJS is asynchronous platform, so statements can get executed before data is prepared and ready to return. In the case of our Axios.get above, if we didn't have the await in front of it then the rest of the code will proceed and attempt to render before our response is returned from the backend service.  To solve this we said that this function is asynchronous and hence we will receive a response from the backend service before proceeding.
 
 3. An alternative is you could do something like we've seen in other services, store the response in state and update it as the data is returned, an example of this will be used in the search functionality next.
@@ -106,6 +112,7 @@ If you want to search for a task name with a space in it, for example "hello wor
 #### Implementation
 
 1. Open the front end component SearchTodo.js, on the line after the comment "//begin here" copy/paste/type the following code:
+```
             e.preventDefault();  
             // HTTP Client to send a GET request
             Axios({
@@ -123,7 +130,7 @@ If you want to search for a task name with a space in it, for example "hello wor
                 });
         
             });
-
+```
 2. Some things to note, there are some UI components defined in this file, the main things they will do is submit a form which will trigger the call to the searchitem backend service, as part of that submit we will take the name of the Todo to search for from the "this.state.content" parameter, the a user would type in the UI text box.
 3. Note also we have state associated with this component "tmpdata", this state will be set to the data returned from the backend service via the "this.setState({tmpdata: JSON.stringify(res.data),});" code we just put in the HandleSubmit method.
 4. We will use this state in the render function, underneath the search UI components you'll see "<div>{this.state.tmpdata}</div>", this is empty initially, because we haven't searched for anything, but once you supply a search parameter and click the "Search" button, we will set the state in the HandleSubmit, which will then update the state in our div to hold the return data from the backend service for the search.
