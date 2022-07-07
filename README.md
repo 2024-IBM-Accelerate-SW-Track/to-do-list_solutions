@@ -33,7 +33,7 @@ Implementation requirements:
 #### Testing
 We will test this service using the curl utility.  The curl utility is quite useful because it can send requests to services, simulating consuming applications that would utilize the backend service.
 
-1. Stop the backend service if it's currently running (Ctrl-C the terminal/command window where you did the last npm run for the backend)
+1. Stop the backend service if it's currently running (Ctrl-C the terminal/command window where you did the last "npm start" for the backend)
 2. Start the backend service, go to the "to-do-list/backend" directory and install required packages and start the backend:
 ```
 npm install
@@ -183,15 +183,15 @@ If you want to search for a task name with a space in it, for example "hello wor
 5. Observe the returned value in the div section below the search UI, it will be updated in real-time after we submit the form, returning with the data obtained from the backend.
 
 ## Pre-session Material
-What is a REST API​
-https://www.redhat.com/en/topics/api/what-is-a-rest-api​
+What is a REST API
+https://www.redhat.com/en/topics/api/what-is-a-rest-api
 
-Rest APIS​
-https://www.ibm.com/cloud/learn/rest-apis​
+Rest APIS
+https://www.ibm.com/cloud/learn/rest-apis
 
-Microservices Architecture​
-https://www.ibm.com/cloud/architecture/architectures/microservices​
+Microservices Architecture
+https://www.ibm.com/cloud/architecture/architectures/microservices
 
-Modernizing Applications​
-https://www.ibm.com/cloud/architecture/architectures/application-modernization​
+Modernizing Applications
+https://www.ibm.com/cloud/architecture/architectures/application-modernization
 
