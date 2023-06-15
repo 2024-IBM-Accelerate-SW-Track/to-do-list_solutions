@@ -24,8 +24,8 @@ app.use(bodyParser.json({ extended: true }));
 
 app.listen(port, () => console.log("Backend server live on " + port));
 
-app.get("/", (request, ressponse) => {
-    res.send({ message: "Connected to Backend server!" });
+app.get("/", (request, response) => {
+    response.send({ message: "Connected to Backend server!" });
 });
 
 //add new item to json file
