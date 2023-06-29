@@ -24,7 +24,7 @@ Implementation requirements:
 2. Go to the GET listener "app.get("/get/items", getItems)"
 3. At the comment "//begin here" copy/paste/type the following code to read in the todo lists stored in the database.json file:
 ```
-    var data = fs.readFileSync('database.json');
+    var data = await fs.readFile("database.json");
 ```
 4. Return a response to whoever called the data we just read in, we will return the data from the file but parsed as JSON data:
 ```
@@ -56,7 +56,7 @@ We will test this service using the curl utility.  The curl utility is quite use
 ```
 4. Continue editing this function by adding the following to read in the database 
 ```
-    var json = JSON.parse (fs.readFileSync('database.json'));
+    var json = JSON.parse (await fs.readFile("database.json"));
 ```
 5. Add the following to take the data from the database and apply a filter, this will seperate out only the Todo lists that match our search parameter given to the backend service and stored in "searchField":
 ```
