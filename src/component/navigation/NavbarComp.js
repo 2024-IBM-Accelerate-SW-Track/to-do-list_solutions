@@ -9,7 +9,8 @@ import {
 } from "react-router-dom"
 import About from "../../pages/About";
 import Home from "../../pages/Home";
-import TodoPage from "../../pages/TodoPage";
+import TodoListAll from "../../pages/TodoListAll";
+import SearchPage from "../../pages/SearchPage";
 
 export default class NavbarComp extends Component {
     render() {
@@ -24,7 +25,8 @@ export default class NavbarComp extends Component {
                     <Nav className="me-auto">
                         <Nav.Link as={Link} to={"/"}> Home </Nav.Link>
                         <Nav.Link as={Link} to={"/about"}>About</Nav.Link>
-                        <Nav.Link as={Link} to={"/TodoPage"}>TodoPage</Nav.Link>
+                        <Nav.Link as={Link} to={"/TodoListAll"}>TodoPage</Nav.Link>
+                        <Nav.Link as={Link} to={"/SearchPage"}>SearchPage</Nav.Link>
                     </Nav>
                     </Navbar.Collapse>
                 </Container>
@@ -34,7 +36,8 @@ export default class NavbarComp extends Component {
                 <Routes>
                 <Route exact path="/" element={<Home/>}/>
                 <Route exact path="/about" element={<About/>}/>
-                <Route exact path="/TodoPage" element={<TodoPage/>}/>
+                <Route exact path="/TodoListAll" element={<TodoListAll/>}/>
+                <Route exact path="/SearchPage" element={<SearchPage/>}/>
                 </Routes>
             </div>
             </Router>
