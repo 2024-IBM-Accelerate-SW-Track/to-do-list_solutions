@@ -183,6 +183,92 @@ If you want to search for a task name with a space in it, for example "hello wor
 
 5. Observe the returned value in the div section below the search UI, it will be updated in real-time after we submit the form, returning with the data obtained from the backend.
 
+
+#### Initialize the Cloudant DB
+
+1. Go to the backend directory and type:
+```
+npm install @ibm-cloud/cloudant
+```
+
+2. Create a cloudant credential with a role of 'writer', get API key from cloud console, use the drop down and copy the "apikey" field value
+
+
+2. Set our cloudant environment variables:
+
+CLOUDANT_URL= cloudant url
+
+CLOUDANT_APIKEY=cloudant apikey
+
+2. Add the following to end of server.js
+
+```
+async function initDB ()
+{
+    //TODO --- Insert to create DB
+    //See example at https://www.npmjs.com/package/@ibm-cloud/cloudant#authentication-with-environment-variables for how to create db
+    
+    try {
+        const todoDBName = "tododb";
+        const client = CloudantV1.newInstance({});
+        const putDatabaseResult = (
+        await client.putDatabase({
+        db: todoDBName,
+      })
+    ).result;
+    if (putDatabaseResult.ok) {
+      console.log(`"${todoDBName}" database created.`);
+    }
+  } catch (err) {
+   
+      console.log(
+        `Cannot create "${todoDBName}" database, err: "${err.message}".`
+      );
+
+  }
+};
+
+```
+4. Add toward the top of server.js under the "//Init Cloudant" comment
+
+```
+const { CloudantV1 } = require('@ibm-cloud/cloudant');
+initDB();
+```
+
+5. start the backend
+```
+npm start
+```
+
+6. What happened? You likely got an error stating "Access is denied due to invalid credentials.", if you look at the cloudant IAM roles [documentation](https://cloud.ibm.com/docs/Cloudant?topic=Cloudant-managing-access-for-cloudant#ibm-cloudant-roles-ai) "writer" does not have permission to create databases. Go to the cloudant management page in IBM cloud, create a new credential with a role of "manager". Copy the apikey value from this new role and set your environment variable to it.
+
+
+7. stop the backend service, ctrl-c in the window its running in
+
+8. Start the backend service again:
+```
+npm start
+```
+
+9. You should now see the database being create on startup:
+```
+npm start
+
+> backend@1.0.0 start
+> node server.js
+
+Backend server live on 8080
+"tododb" database created.
+```
+
+
+
+
+
+### Store a Todo task in a Cloudant DB
+
+
 ## Pre-session Material
 What is a REST API
 https://www.redhat.com/en/topics/api/what-is-a-rest-api
