@@ -9,9 +9,13 @@ const todoDBName = "tododb";
 const useCloudant = true;
 
 
-//Init Cloudant
+
+//Init code for Cloudant
 const {CloudantV1} = require('@ibm-cloud/cloudant');
-initDB();
+if (useCloudant)
+{
+    initDB();
+}
 
 
 app.use(cors());
@@ -41,9 +45,10 @@ async function addItem (request, response) {
           Current_date: curDate,
           Due_date: dueDate
         }
-
+        
         if (useCloudant) {
-            const todoDocID = id;
+            //begin here for cloudant
+            //const todoDocID = id;
 
             // Setting `_id` for the document is optional when "postDocument" function is used for CREATE.
             // When `_id` is not provided the server will generate one for your document.
@@ -63,10 +68,11 @@ async function addItem (request, response) {
             });
             console.log('Successfully wrote to cloudant DB');
         } else {
+            //original write to local file
             const data = await fsPromises.readFile("database.json");
             const json = JSON.parse(data);
             json.push(newTask);
-            await fs.writeFile("database.json", JSON.stringify(json))
+            await fsPromises.writeFile("database.json", JSON.stringify(json))
             console.log('Successfully wrote to file') 
         }
         response.sendStatus(200)
@@ -90,25 +96,16 @@ async function getItems (request, response) {
         db: todoDBName,
         includeDocs: true
     }).then(response => {
-        //console.log(response.result);
         listofdocs=response.result;
         });
-        /*
-        client.postAllDocsAsStream({
-            db: todoDBName,
-        includeDocs: true
-          }).then(response => {
-            let stream =  fs.createWriteStream("result.json");
-            response.result.pipe(stream);
-            response.result.on('end', () => stream.end());
-            console.log(response.result);
-          });*/
     response.json(JSON.stringify(listofdocs));
     }
     else {
+    //for non-cloudant use-case
     var data = await fsPromises.readFile("database.json");
     response.json(JSON.parse(data));
     }
+
 };
 
 //** week 6, search items service */

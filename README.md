@@ -24,7 +24,7 @@ Implementation requirements:
 2. Go to the GET listener "app.get("/get/items", getItems)"
 3. At the comment "//begin here" copy/paste/type the following code to read in the todo lists stored in the database.json file:
 ```
-    var data = await fs.readFile("database.json");
+    var data = await fsPromises.readFile("database.json");
 ```
 4. Return a response to whoever called the data we just read in, we will return the data from the file but parsed as JSON data:
 ```
@@ -56,11 +56,12 @@ We will test this service using the curl utility.  The curl utility is quite use
 ```
 4. Continue editing this function by adding the following to read in the database 
 ```
-    var json = JSON.parse (await fs.readFile("database.json"));
+    var json = JSON.parse (await fsPromises.readFile("database.json"));
 ```
 5. Add the following to take the data from the database and apply a filter, this will seperate out only the Todo lists that match our search parameter given to the backend service and stored in "searchField":
 ```
     var returnData = json.filter(jsondata => jsondata.Task === searchField);
+    
 ```
 6. Whether we have data to return (i.e. todo lists that matches the name we're looking for) or not (i.e. there were no todo lists with the name), we return a response to whoever called this service with the following:
 ```
@@ -81,17 +82,17 @@ We will test this service using the curl utility.  The curl utility is quite use
 3. Open another terminal or command window.  
 Contruct a curl command to search for a task: 
 ``` 
-    curl http://localhost:8080/get/searchitem?taskname=<nametosearchfor>
+    curl 'http://localhost:8080/get/searchitem?taskname=<nametosearchfor>'
 ```
 
 So for example, if you want to search for todo lists with a name of "hello", your command would be:
 ```
-    curl http://localhost:8080/get/searchitem?taskname=hello
+    curl 'http://localhost:8080/get/searchitem?taskname=hello'
 ```
 
 If you want to search for a task name with a space in it, for example "hello world" you will need to use the html code for a space (%20) in your curl command, like this: 
 ```
-    curl http://localhost:8080/get/searchitem?taskname=hello%20world
+    curl 'http://localhost:8080/get/searchitem?taskname=hello%20world'
 ```
 
 ### Optional - Use the UI to Call the Backend Service to Return All Todo Lists
@@ -115,7 +116,7 @@ If you want to search for a task name with a space in it, for example "hello wor
         }, []);
         return <div>{todos}</div>
 ```
-2. Note the above code does a number of things, it makes use of the "useEffect" hook in react, and the await keyword, this combination is essentially telling react to wait for a call to a backend service to complete, then proceeds with the rest of the render.  Remember that nodeJS is asynchronous platform, so statements can get executed before data is prepared and ready to return. In the case of our Axios.get above, if we didn't have the await in front of it then the rest of the code will proceed and attempt to render before our response is returned from the backend service.  To solve this we said that this function is asynchronous and hence we will receive a response from the backend service before proceeding.
+2. Note the above code does a number of things, it makes use of the "useEffect" hook in react, and the await keyword, this combination is essentially telling react to wait for a call to a backend service to complete, then proceeds with the rest of the render.  Remember that nodeJS is an asynchronous platform, so statements can get executed before data is prepared and ready to return. In the case of our Axios.get above, if we didn't have the await in front of it then the rest of the code will proceed and attempt to render before our response is returned from the backend service.  To solve this we said that this function is asynchronous and hence we will receive a response from the backend service before proceeding.
 
 3. An alternative is you could do something like we've seen in other services, store the response in state and update it as the data is returned, an example of this will be used in the search functionality next.
 
@@ -177,11 +178,12 @@ If you want to search for a task name with a space in it, for example "hello wor
     npm start
 ```
 
-3. Go to a browser and open the front-end, if not open already, http://localhost:3000, this should bring up the home page. Go to the top navigation bar and click on the "TodoPage"
+3. Go to a browser and open the front-end, if not open already, http://localhost:3000, this should bring up the home page. Go to the top navigation bar and click on the "SearchPage" link.
 
 4. Notice the input text box and button that will search for a Todo list in the backend. Type a task name that you know exists or doesn't exist and click the button. (Note if you left the frontend and backend services running after completing the lab steps above make sure you refresh the page so the changes you made load correctly in the browser)
 
 5. Observe the returned value in the div section below the search UI, it will be updated in real-time after we submit the form, returning with the data obtained from the backend.
+
 
 
 #### Initialize the Cloudant DB
@@ -200,7 +202,7 @@ CLOUDANT_URL= cloudant url
 
 CLOUDANT_APIKEY=cloudant apikey
 
-2. Add the following to end of server.js
+2. Add the following to end of server.js after the '// Add initDB function here' code block:
 
 ```
 async function initDB ()
@@ -232,8 +234,11 @@ async function initDB ()
 4. Add toward the top of server.js under the "//Init Cloudant" comment
 
 ```
-const { CloudantV1 } = require('@ibm-cloud/cloudant');
-initDB();
+const {CloudantV1} = require('@ibm-cloud/cloudant');
+if (useCloudant)
+{
+    initDB();
+}
 ```
 
 5. start the backend
@@ -264,11 +269,124 @@ Backend server live on 8080
 
 
 
-
-
 ### Store a Todo task in a Cloudant DB
+1. in the server.js file add the following to the addItem function after the '//begin here for cloudant' code block:
+```
+            // Setting `_id` for the document is optional when "postDocument" function is used for CREATE.
+            // When `_id` is not provided the server will generate one for your document.
+            const todoDocument = { _id: id.stringify };
+          
+            // Add "name" and "joined" fields to the document
+            todoDocument['task'] = task;
+            todoDocument.curDate = curDate;
+            todoDocument.dueDate = dueDate;
+          
+            // Save the document in the database with "postDocument" function
+            const client = CloudantV1.newInstance({});
+            console.log('Writing to: ', todoDBName)
+            const createDocumentResponse = await client.postDocument({
+              db: todoDBName,
+              document: todoDocument,
+            });
+            console.log('Successfully wrote to cloudant DB');
+```
+### Return all items from Cloudant
+1. in the server.js file we're going to add code for cloudant to retrieve, but in an if/else block, if we are using cloudant go to cloudant to retrieve, otherwise use the local file as before, to do this easily replace the entire getItems function as follows:
+
+```
+//** week 6, get all items from the json database*/
+app.get("/get/items", getItems)
+async function getItems (request, response) {
+    //begin here
+
+    //begin cloudant here
+    if (useCloudant) {
+    //add for cloudant client
+    const client = CloudantV1.newInstance({});
+    var listofdocs;
+    await client.postAllDocs({
+        db: todoDBName,
+        includeDocs: true
+    }).then(response => {
+        listofdocs=response.result;
+        });
+    response.json(JSON.stringify(listofdocs));
+    }
+    else {
+    //for non-cloudant use-case
+    var data = await fsPromises.readFile("database.json");
+    response.json(JSON.parse(data));
+    }
+
+};
+```
 
 
+### Search a Todo Task in Cloudant
+
+1. create index and design document in cloudant
+
+
+2. In server.js replace your searchItems function code as follows:
+```
+//** week 6, search items service */
+app.get("/get/searchitem", searchItems) 
+async function searchItems (request, response) {
+    //begin here
+    var searchField = request.query.taskname;
+
+    if (useCloudant){
+        const client = CloudantV1.newInstance({});
+        var search_results
+        await client.postSearch({
+            db: todoDBName,
+            ddoc: 'newdesign',
+            query: 'task:'+searchField,
+            index: 'newSearch'
+          }).then(response => {
+            search_results=response.result;
+            console.log(response.result);
+          });
+        console.log(search_results);
+        response.json(JSON.stringify(search_results));
+        
+    }
+    else {
+    var json = JSON.parse (await fsPromises.readFile("database.json"));
+    var returnData = json.filter(jsondata => jsondata.Task === searchField);
+    response.json(returnData);
+    }
+};
+```
+
+### Enable Cloudant code and test
+1. in server.js near the top the useCloudant value from true to false, like so:
+
+```
+const useCloudant = true;
+```
+
+2. Stop the backend server if not already stopped with a cntrl-c, go to the backend directory on a command window and type:
+```
+npm start
+```
+
+3. Start the front-end UI if not already started, from a separate command window go to the top level directory to-do-list, and run:
+```
+npm start
+```
+
+4. Go to the browser and open the front-end url: localhost:3000
+
+5. Try to add a todo item, you should see a message in the backend console after it's added:
+```
+Writing to:  tododb
+Successfully wrote to cloudant DB
+```
+
+6. Click on the TodoPage menu link at the top of the webpage:
+
+7. Click on the SearchPage menu link at the top of the webpage, input a task name to search for and observe results returned from cloudant:
 ## Pre-session Material
 What is a REST API
 https://www.redhat.com/en/topics/api/what-is-a-rest-api
