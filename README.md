@@ -122,20 +122,24 @@ If you want to search for a task name with a space in it, for example "hello wor
 
 #### Testing
 
-1. Go to the "to-do-list" directory and run the front-end and run:
+1. Go to the *to-do-list* directory, if this is the first time running the front-end for this week execute the following:
 ```
     npm install
+    npm audit fix --force
+```
+2. Start the front end by running the following command in the *to-do-list* directory:
+```
     npm start
 ```
 
-2. Open a terminal or command window and go to the to-do-list/backend directory and run the backend:
+3. Open *another* terminal or command window and go to the *to-do-list/backend* directory and run the backend:
 ```
     npm start
 ```
 
-3. Go to a browser and open the front-end, if not open already, http://localhost:3000, this should bring up the home page. Go to the top navigation bar and click on the "TodoPage"
+4. Go to a browser and open the front-end, if not open already, http://localhost:3000, this should bring up the home page. Go to the top navigation bar and click on the "TodoPage"
 
-4. Notice on page load that the top of the page is populated with all of your tasks, saved from the backend service.
+5. Notice on page load that the top of the page is populated with all of your tasks, saved from the backend service.
 
 ### Optional - Use the UI to search for a ToDo list
 
@@ -167,24 +171,58 @@ If you want to search for a task name with a space in it, for example "hello wor
 
 
 #### Testing
-1. Go to the "to-do-list" directory and run the front-end and run:
+1. Go to the *to-do-list* directory, if this is the first time running the front-end for this week execute the following:
 ```
     npm install
+    npm audit fix --force
+```
+2. Start the front end by running the following command in the *to-do-list* directory:
+```
     npm start
 ```
 
-2. Open a terminal or command window and go to the to-do-list/backend directory and run the backend:
+3. Open *another* terminal or command window and go to the *to-do-list/backend* directory and run the backend:
 ```
     npm start
 ```
 
-3. Go to a browser and open the front-end, if not open already, http://localhost:3000, this should bring up the home page. Go to the top navigation bar and click on the "SearchPage" link.
+4. Go to a browser and open the front-end, if not open already, http://localhost:3000, this should bring up the home page. Go to the top navigation bar and click on the "SearchPage" link.
 
-4. Notice the input text box and button that will search for a Todo list in the backend. Type a task name that you know exists or doesn't exist and click the button. (Note if you left the frontend and backend services running after completing the lab steps above make sure you refresh the page so the changes you made load correctly in the browser)
+5. Notice the input text box and button that will search for a Todo list in the backend. Type a task name that you know exists or doesn't exist and click the button. (Note if you left the frontend and backend services running after completing the lab steps above make sure you refresh the page so the changes you made load correctly in the browser)
 
-5. Observe the returned value in the div section below the search UI, it will be updated in real-time after we submit the form, returning with the data obtained from the backend.
+6. Observe the returned value in the div section below the search UI, it will be updated in real-time after we submit the form, returning with the data obtained from the backend.
 
+### Optional - Integration with Cloudant
 
+*Note for this section you'll need an IBM Cloud account, so this might be something to try in later weeks when you will provision IBM Cloud accounts*
+
+#### Create a Cloudant DB
+
+1. Log in to IBM Cloud with your free/trial account.
+
+2. Click "Catalog" along the top right of the page.
+
+3. In the search bar type in "cloudant" and select the first option returned (the cloudant service).
+
+4. Accept all the defaults and scroll to the bottom, the "Lite" plan should be selected which on the right side of the page shows as "free".
+
+5. Click the "Create" button on the lower right side of the page.
+
+6. The cloudant DB will create and make take some minutes to provision. You can view your cloudant resource from the hamburger menu on the top left -> "Resource List", then expand "Databases", your instance will be there and you can monitor it's provisioning progress, when it has a Status of "Active" then it's good to use.
+
+7. Select your Cloudant DB from this page, you will now see a display for managing your cloudant DB. Copy the value for "External endpoint (preferred)".
+
+8. Go to the left side tab and select "Service credentials", now click the "New credential" button, you can specify any name or the default, and select a role of "writer" for now, then click "Add".
+
+9. Once your service credential is created expand it and you should see a number of lines of information, you'll want to copy the value of "apikey", for example:
+```
+"apikey": "cwo1uoJqYL-I8jb_rDTL333XCZFwu_T2yWVSOHvp_XK_",
+```
+
+We will want to copy the value:
+```
+cwo1uoJqYL-I8jb_rDTL333XCZFwu_T2yWVSOHvp_XK_
+```
 
 #### Initialize the Cloudant DB
 
@@ -196,13 +234,16 @@ npm install @ibm-cloud/cloudant
 2. Create a cloudant credential with a role of 'writer', get API key from cloud console, use the drop down and copy the "apikey" field value
 
 
-2. Set our cloudant environment variables:
+3. Set our cloudant environment variables, in a command window (this process may vary depending on what type of shell you're using) type the following (inserting the values you copied in the previous section):
 
-CLOUDANT_URL= cloudant url
+```
+CLOUDANT_URL= <the value from step 7 in the previous section>
+export CLOUDANT_URL
+CLOUDANT_APIKEY=<the value from step 9 in the previous section>
+export CLOUDANT_APIKEY
+```
 
-CLOUDANT_APIKEY=cloudant apikey
-
-2. Add the following to end of server.js after the '// Add initDB function here' code block:
+4. Add the following to end of server.js after the '// Add initDB function here' code block:
 
 ```
 async function initDB ()
@@ -229,9 +270,8 @@ async function initDB ()
 
   }
 };
-
 ```
-4. Add toward the top of server.js under the "//Init Cloudant" comment
+5. Add toward the top of server.js under the "//Init code for Cloudant" comment
 
 ```
 const {CloudantV1} = require('@ibm-cloud/cloudant');
@@ -241,22 +281,28 @@ if (useCloudant)
 }
 ```
 
-5. start the backend
+6. start the backend
 ```
 npm start
 ```
 
-6. What happened? You likely got an error stating "Access is denied due to invalid credentials.", if you look at the cloudant IAM roles [documentation](https://cloud.ibm.com/docs/Cloudant?topic=Cloudant-managing-access-for-cloudant#ibm-cloudant-roles-ai) "writer" does not have permission to create databases. Go to the cloudant management page in IBM cloud, create a new credential with a role of "manager". Copy the apikey value from this new role and set your environment variable to it.
+7. In server.js near the top, set the useCloudant value from 'false' to 'true', like so:
+
+```
+const useCloudant = true;
+```
+
+8. What happened? You likely got an error stating "Access is denied due to invalid credentials.", if you look at the cloudant IAM roles [documentation](https://cloud.ibm.com/docs/Cloudant?topic=Cloudant-managing-access-for-cloudant#ibm-cloudant-roles-ai) "writer" does not have permission to create databases. Go to the cloudant management page in IBM cloud, create a new credential with a role of "manager". Copy the apikey value from this new role and set your environment variable to it.
 
 
-7. stop the backend service, ctrl-c in the window its running in
+9. stop the backend service, ctrl-c in the window its running in
 
-8. Start the backend service again:
+10. Start the backend service again:
 ```
 npm start
 ```
 
-9. You should now see the database being create on startup:
+11. You should now see the database being create on startup:
 ```
 npm start
 
@@ -267,10 +313,9 @@ Backend server live on 8080
 "tododb" database created.
 ```
 
+#### Store a Todo task in a Cloudant DB
 
-
-### Store a Todo task in a Cloudant DB
-1. in the server.js file add the following to the addItem function after the '//begin here for cloudant' code block:
+1. In the server.js file add the following to the addItem function after the '//begin here for cloudant' code block:
 ```
             // Setting `_id` for the document is optional when "postDocument" function is used for CREATE.
             // When `_id` is not provided the server will generate one for your document.
@@ -290,8 +335,9 @@ Backend server live on 8080
             });
             console.log('Successfully wrote to cloudant DB');
 ```
-### Return all items from Cloudant
-1. in the server.js file we're going to add code for cloudant to retrieve, but in an if/else block, if we are using cloudant go to cloudant to retrieve, otherwise use the local file as before, to do this easily replace the entire getItems function as follows:
+#### Return all items from Cloudant
+
+1. in the server.js file we're going to add code for cloudant to retrieve, but in an if/else block, if we are using cloudant go to cloudant to retrieve, otherwise use the local file as before. To make these changes easily, replace the entire getItems function in server.js as follows:
 
 ```
 //** week 6, get all items from the json database*/
@@ -322,7 +368,7 @@ async function getItems (request, response) {
 ```
 
 
-### Search a Todo Task in Cloudant
+#### Search a Todo Task in Cloudant
 
 1. create index and design document in cloudant
 
@@ -359,8 +405,8 @@ async function searchItems (request, response) {
 };
 ```
 
-### Enable Cloudant code and test
-1. in server.js near the top the useCloudant value from true to false, like so:
+#### Enable Cloudant code and test
+1. If you haven't already set useCloudant to 'true', in server.js near the top, set the useCloudant value from 'false' to 'true', like so:
 
 ```
 const useCloudant = true;
@@ -387,7 +433,9 @@ Successfully wrote to cloudant DB
 6. Click on the TodoPage menu link at the top of the webpage:
 
 7. Click on the SearchPage menu link at the top of the webpage, input a task name to search for and observe results returned from cloudant:
+
 ## Pre-session Material
+
 What is a REST API
 https://www.redhat.com/en/topics/api/what-is-a-rest-api
 
