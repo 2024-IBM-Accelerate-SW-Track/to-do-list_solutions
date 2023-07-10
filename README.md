@@ -198,9 +198,23 @@ If you want to search for a task name with a space in it, for example "hello wor
 
 #### Create a Cloudant DB
 
-1. See the Presession Materials for creating and accessing your Cloudant DB from IBM Cloud.
+1. Log in to IBM Cloud with your free/trial account.
 
-2. The steps in the presession will have you create a service credential for Cloudant so your application can access the service.  Once your service credential is created expand it and you should see a number of lines of information, you'll want to copy the value of "apikey", for example:
+2. Click "Catalog" along the top right of the page.
+
+3. In the search bar type in "cloudant" and select the first option returned (the cloudant service).
+
+4. Accept all the defaults and scroll to the bottom, the "Lite" plan should be selected which on the right side of the page shows as "free".
+
+5. Click the "Create" button on the lower right side of the page.
+
+6. The cloudant DB will create and make take some minutes to provision. You can view your cloudant resource from the hamburger menu on the top left -> "Resource List", then expand "Databases", your instance will be there and you can monitor it's provisioning progress, when it has a Status of "Active" then it's good to use.
+
+7. Select your Cloudant DB from this page, you will now see a display for managing your cloudant DB. Copy the value for "External endpoint (preferred)".
+
+8. Go to the left side tab and select "Service credentials", now click the "New credential" button, you can specify any name or the default, and select a role of "writer" for now, then click "Add".
+
+9. Once your service credential is created expand it and you should see a number of lines of information, you'll want to copy the value of "apikey", for example:
 ```
 "apikey": "cwo1uoJqYL-I8jb_rDTL333XCZFwu_T2yWVSOHvp_XK_",
 ```
@@ -356,7 +370,7 @@ async function getItems (request, response) {
 
 #### Search a Todo Task in Cloudant
 
-1. See the presession materials for how to create the a design document and index to be used in searching the database, this is needed before the database can return results of a search.
+1. create index and design document in cloudant
 
 
 2. In server.js replace your searchItems function code as follows:
