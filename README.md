@@ -434,17 +434,3 @@ Successfully wrote to cloudant DB
 
 7. Click on the SearchPage menu link at the top of the webpage, input a task name to search for and observe results returned from cloudant:
 
-## Pre-session Material
-
-What is a REST API
-https://www.redhat.com/en/topics/api/what-is-a-rest-api
-
-Rest APIS
-https://www.ibm.com/cloud/learn/rest-apis
-
-Microservices Architecture
-https://www.ibm.com/cloud/architecture/architectures/microservices
-
-Modernizing Applications
-https://www.ibm.com/cloud/architecture/architectures/application-modernization
-
